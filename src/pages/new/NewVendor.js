@@ -1,19 +1,16 @@
 import "./new.scss";
-import Sidebar from "../../components/sidebar/Sidebar";
-import Navbar from "../../components/navbar/Navbar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import { useState } from "react";
+import { userInputs } from "../../formSource";
 
-const NewVendor = ({ inputs, title }) => {
+const NewVendor = () => {
   const [file, setFile] = useState("");
 
   return (
     <div className="new">
-      <Sidebar />
       <div className="newContainer">
-        <Navbar />
         <div className="top">
-          <h1>{title}</h1>
+          <h1>Add New Vendor</h1>
         </div>
         <div className="bottom">
           <div className="left">
@@ -40,7 +37,7 @@ const NewVendor = ({ inputs, title }) => {
                 />
               </div>
 
-              {inputs.map((input) => (
+              {userInputs.map((input) => (
                 <div className="formInput" key={input.id}>
                   <label>{input.label}</label>
                   <input type={input.type} placeholder={input.placeholder} />

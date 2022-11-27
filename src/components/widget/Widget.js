@@ -4,20 +4,23 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+import { Link } from "react-router-dom";
 
 const Widget = ({ type }) => {
   let data;
 
   //temporary
-  const amount = 100;
+  // const amount = 100;
   const diff = 20;
 
   switch (type) {
-    case "user":
+    case "customer":
       data = {
-        title: "USERS",
+        title: "CUSTOMERS",
         isMoney: false,
-        link: "See all users",
+        link: "See all customers",
+        url: "/customers",
+        amount: 1000,
         icon: (
           <PersonOutlinedIcon
             className="icon"
@@ -34,6 +37,7 @@ const Widget = ({ type }) => {
         title: "ORDERS",
         isMoney: false,
         link: "View all orders",
+        amount: 1500,
         icon: (
           <ShoppingCartOutlinedIcon
             className="icon"
@@ -50,6 +54,7 @@ const Widget = ({ type }) => {
         title: "EARNINGS",
         isMoney: true,
         link: "View net earnings",
+        amount: 3500000,
         icon: (
           <MonetizationOnOutlinedIcon
             className="icon"
@@ -63,6 +68,7 @@ const Widget = ({ type }) => {
         title: "BALANCE",
         isMoney: true,
         link: "See details",
+        amount: 3200000,
         icon: (
           <AccountBalanceWalletOutlinedIcon
             className="icon"
@@ -83,9 +89,11 @@ const Widget = ({ type }) => {
       <div className="left">
         <span className="title">{data.title}</span>
         <span className="counter">
-          {data.isMoney && "$"} {amount}
+          {data.isMoney && "$"} {data.amount}
         </span>
-        <span className="link">{data.link}</span>
+        <Link to={data.url} style={{ textDecoration: "none" }}>
+          <span className="link">{data.link}</span>
+        </Link>
       </div>
       <div className="right">
         <div className="percentage positive">

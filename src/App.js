@@ -55,6 +55,15 @@ function App() {
               </Dashboard>
             }
           />
+          <Route
+            index
+            path="edit"
+            element={
+              <Dashboard>
+                <NewCustomer />
+              </Dashboard>
+            }
+          />
         </Route>
         <Route path="products">
           <Route
@@ -83,6 +92,15 @@ function App() {
               </Dashboard>
             }
           />
+          <Route
+            index
+            path="edit"
+            element={
+              <Dashboard>
+                <NewProduct />
+              </Dashboard>
+            }
+          />
         </Route>
         <Route path="vendors">
           <Route
@@ -105,6 +123,15 @@ function App() {
           <Route
             index
             path="new"
+            element={
+              <Dashboard>
+                <NewVendor />
+              </Dashboard>
+            }
+          />
+          <Route
+            index
+            path="edit"
             element={
               <Dashboard>
                 <NewVendor />
