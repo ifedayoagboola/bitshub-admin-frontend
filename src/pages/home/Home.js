@@ -3,10 +3,12 @@ import Widget from "../../components/widget/Widget";
 import Featured from "../../components/featured/Featured";
 import Chart from "../../components/chart/Chart";
 import Table from "../../components/table/Table";
+import { Counter } from "../../features/counter/Counter";
 
 const Home = () => {
   return (
     <div>
+      {/* <Counter /> */}
       <div className="widgets">
         <Widget type="customer" />
         <Widget type="order" />
