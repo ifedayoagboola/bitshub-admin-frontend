@@ -1,16 +1,25 @@
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { listProducts } from "../../redux/apiCalls";
 import "./new.scss";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import { useState } from "react";
-import { userInputs } from "../../formSource";
+import { productInputs, userInputs } from "../../formSource";
 
 const NewProduct = () => {
   const [file, setFile] = useState("");
+  const { products, loading, error } = useSelector((state) => state.products);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(listProducts(dispatch));
+  }, [dispatch]);
 
   return (
     <div className="new">
       <div className="newContainer">
         <div className="top">
-          <h1>Add New Customer</h1>
+          <h1>Add New Product</h1>
         </div>
         <div className="bottom">
           <div className="left">
@@ -36,8 +45,7 @@ const NewProduct = () => {
                   style={{ display: "none" }}
                 />
               </div>
-
-              {userInputs.map((input) => (
+              {productInputs.map((input) => (
                 <div className="formInput" key={input.id}>
                   <label>{input.label}</label>
                   <input type={input.type} placeholder={input.placeholder} />
