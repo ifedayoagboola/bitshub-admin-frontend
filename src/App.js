@@ -94,7 +94,7 @@ function App() {
           />
           <Route
             index
-            path="edit"
+            path=":id/edit"
             element={
               <Dashboard>
                 <NewProduct />

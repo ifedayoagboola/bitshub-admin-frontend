@@ -64,12 +64,15 @@ const ProductList = () => {
             <Link to="/products/001" style={{ textDecoration: "none" }}>
               <div className="viewButton">View</div>
             </Link>
-            <Link to="/products/edit" style={{ textDecoration: "none" }}>
+            <Link
+              to={`/products/${params.row._id}/edit`}
+              style={{ textDecoration: "none" }}
+            >
               <div className="viewButton">Edit</div>
             </Link>
             <div
               className="deleteButton"
-              onClick={() => handleDelete(params.row.id)}
+              onClick={() => handleDelete(params.row._id)}
             >
               Delete
             </div>
