@@ -28,7 +28,6 @@ export function ReduxTest() {
           Increment
         </button>
         <span>{count}</span>
-        {/* <span>{name}</span> */}
         <button
           aria-label="Decrement value"
           onClick={() => dispatch(decrement())}

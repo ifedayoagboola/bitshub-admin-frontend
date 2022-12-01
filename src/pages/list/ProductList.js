@@ -4,10 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { listProducts } from "../../redux/apiCalls";
 import "./list.scss";
 import Datatable from "../../components/datatable/Datatable";
-// import { userRows } from "../../datatablesource";
 
 const ProductList = () => {
-  // const [data, setData] = useState(userRows);
   const { products, loading, error } = useSelector((state) => state.products);
   const dispatch = useDispatch();
 
@@ -20,7 +18,7 @@ const ProductList = () => {
   };
 
   const userColumns = [
-    { field: "_id", headerName: "ID", width: 70 },
+    { field: "_id", headerName: "ID", width: 230 },
     {
       field: "name",
       headerName: "Name",
@@ -37,7 +35,10 @@ const ProductList = () => {
     {
       field: "price",
       headerName: "Price",
-      width: 230,
+      width: 100,
+      renderCell: (params) => {
+        return <div>₦{params.row.price}</div>;
+      },
     },
 
     {
@@ -48,7 +49,7 @@ const ProductList = () => {
     {
       field: "brand",
       headerName: "Brand",
-      width: 160,
+      width: 100,
       renderCell: (params) => {
         return <div>{params.row.brand}</div>;
       },
