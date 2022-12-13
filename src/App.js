@@ -8,7 +8,7 @@ import SingleCustomer from "./pages/single/SingleCustomer";
 import NewCustomer from "./pages/new/NewCustomer";
 import SingleProduct from "./pages/single/SingleProduct";
 import ProductList from "./pages/list/ProductList";
-import NewProduct from "./pages/new/NewProduct";
+import EditProduct from "./pages/new/EditProduct";
 import OrderList from "./pages/list/OrderList";
 import SingleOrder from "./pages/single/SingleOrder";
 import NewVendor from "./pages/new/NewVendor";
@@ -88,7 +88,7 @@ function App() {
             path="new"
             element={
               <Dashboard>
-                <NewProduct />
+                <EditProduct />
               </Dashboard>
             }
           />
@@ -97,7 +97,7 @@ function App() {
             path=":id/edit"
             element={
               <Dashboard>
-                <NewProduct />
+                <EditProduct />
               </Dashboard>
             }
           />
