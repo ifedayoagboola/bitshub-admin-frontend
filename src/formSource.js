@@ -128,13 +128,13 @@ export const productInputs = [
     placeholder: "Color",
   },
   {
-    id: 10,
+    id: 15,
     label: "Reviews",
     type: "text",
     placeholder: "Reviews",
   },
   {
-    id: 15,
+    id: 16,
     label: "Brand",
     type: "text",
     placeholder: "Brand",

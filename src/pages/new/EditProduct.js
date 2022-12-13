@@ -5,11 +5,14 @@ import "./new.scss";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import { useState } from "react";
 import { productInputs, userInputs } from "../../formSource";
+import { useParams } from "react-router-dom";
 
-const NewProduct = () => {
+const EditProduct = () => {
   const [file, setFile] = useState("");
   const { products, loading, error } = useSelector((state) => state.products);
   const dispatch = useDispatch();
+  const { id } = useParams();
+  console.log(id);
 
   useEffect(() => {
     dispatch(listProducts(dispatch));
@@ -60,4 +63,4 @@ const NewProduct = () => {
   );
 };
 
-export default NewProduct;
+export default EditProduct;
