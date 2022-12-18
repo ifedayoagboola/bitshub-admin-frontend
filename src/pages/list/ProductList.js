@@ -1,28 +1,44 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { listProducts } from "../../redux/apiCalls";
 import "./list.scss";
 import Datatable from "../../components/datatable/Datatable";
+import { listProducts } from "../../redux/slices/productSlice";
 
 const ProductList = () => {
   const { products, loading, error } = useSelector((state) => state.products);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(listProducts(dispatch));
+    dispatch(listProducts());
   }, [dispatch]);
+  console.log(products);
 
   const handleDelete = (id) => {
     // setData(data.filter((item) => item.id !== id));
   };
 
   const userColumns = [
-    { field: "_id", headerName: "ID", width: 230 },
+    {
+      field: "image",
+      headerName: "Product",
+      width: 100,
+      renderCell: (params) => {
+        return (
+          <div className="cellWithImg">
+            <img
+              className="cellImg"
+              src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+              alt="avatar"
+            />
+          </div>
+        );
+      },
+    },
     {
       field: "name",
       headerName: "Name",
-      width: 230,
+      width: 150,
       renderCell: (params) => {
         return (
           <div className="cellWithImg">
@@ -40,6 +56,22 @@ const ProductList = () => {
         return <div>₦{params.row.price}</div>;
       },
     },
+    {
+      field: "offer",
+      headerName: "Offer",
+      width: 100,
+      renderCell: (params) => {
+        return <div>25% OFF</div>;
+      },
+    },
+    {
+      field: "stock",
+      headerName: "Stock",
+      width: 100,
+      renderCell: (params) => {
+        return <div>{params.row.quantityInStock}</div>;
+      },
+    },
 
     {
       field: "category",
@@ -55,13 +87,32 @@ const ProductList = () => {
       },
     },
     {
+      field: "status",
+      headerName: "Status",
+      width: 100,
+      renderCell: (params) => {
+        return <div>ACTIVE</div>;
+      },
+    },
+    {
+      field: "date",
+      headerName: "Date",
+      width: 100,
+      renderCell: (params) => {
+        return <div>{params.row.createdAt}</div>;
+      },
+    },
+    {
       field: "action",
       headerName: "Action",
       width: 200,
       renderCell: (params) => {
         return (
           <div className="cellAction">
-            <Link to="/products/001" style={{ textDecoration: "none" }}>
+            <Link
+              to={`/products/${params.row._id}`}
+              style={{ textDecoration: "none" }}
+            >
               <div className="viewButton">View</div>
             </Link>
             <Link
