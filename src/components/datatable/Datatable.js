@@ -9,7 +9,7 @@ const Datatable = ({ title, url, data, actionColumn }) => {
         {title}
         {url ? (
           <Link to={url} className="link">
-            Add New
+            Add Product
           </Link>
         ) : (
           ""
