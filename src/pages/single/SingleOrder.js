@@ -1,4 +1,4 @@
-import "./single.scss";
+import "../../styles/single.css";
 import Chart from "../../components/chart/Chart";
 import List from "../../components/table/Table";
 

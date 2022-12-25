@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import "./list.scss";
+import "../../styles/list.css";
 import Datatable from "../../components/datatable/Datatable";
 import { listProducts } from "../../redux/slices/productSlice";
 
@@ -12,7 +12,6 @@ const ProductList = () => {
   useEffect(() => {
     dispatch(listProducts());
   }, [dispatch]);
-  console.log(products);
 
   const handleDelete = (id) => {
     // setData(data.filter((item) => item.id !== id));

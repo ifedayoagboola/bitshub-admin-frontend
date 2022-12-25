@@ -1,4 +1,4 @@
-import "./new.scss";
+import "./new.css";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import React, { useState } from "react";
 import { userInputs } from "../../formSource";

@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { productDetails } from "../../redux/slices/productSlice";
-import "./single.scss";
 import Chart from "../../components/chart/Chart";
 import List from "../../components/table/Table";
 import LoadingBox from "../../components/LoadingBox";
 import MessageBox from "../../components/MessageBox";
 import Rating from "../../components/Rating";
 import Breadcrumbs from "../../components/Breadcrumbs";
+import TeamCard from "../../components/TeamCard";
 
 const SingleProduct = () => {
   const { productId } = useParams();
@@ -20,34 +20,65 @@ const SingleProduct = () => {
   useEffect(() => {
     dispatch(productDetails(productId));
   }, [dispatch, productId]);
-  console.log(loading, product, error);
+
   return (
     <div>
       {loading ? (
-        <LoadingBox>fkdd</LoadingBox>
+        <LoadingBox>Loading...</LoadingBox>
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
         <div>
           <Breadcrumbs page="Product view" />
-          <div className="container grid md:grid-cols-2 gap-6">
-            {/* <div>
-              <img src={product?.image[0]} alt={product?.name} />
+          <div className="grid lg:grid-cols-3 gap-3 md:grid-cols-3 sm:grid-cols-2 mx-4">
+            <div>
+              <img
+                src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                alt={product?.name}
+              />
               <div className="grid grid-cols-5 gap-4 mt-4">
                 <img
-                  src={product?.image[0]}
+                  src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
                   alt={product?.name}
                   className="w-full cursor-pointer border hover:border-primary"
                 />
-                <img src={product?.image[1]} alt="" className="w-full cursor-pointer border hover:border-primary" />
-                <img src={product?.image[1]} alt="" className="w-full cursor-pointer border hover:border-primary" />
-                <img src={product?.image[1]} alt="" className="w-full cursor-pointer border hover:border-primary" />
-                <img src={product?.image[1]} alt="" className="w-full cursor-pointer border hover:border-primary" />
-                <img src={product?.image[1]} alt="" className="w-full cursor-pointer border hover:border-primary" />
-                <img src={product?.image[1]} alt="" className="w-full cursor-pointer border hover:border-primary" />
-                <img src={product?.image[1]} alt="" className="w-full cursor-pointer border hover:border-primary" />
+                <img
+                  src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                  alt=""
+                  className="w-full cursor-pointer border hover:border-primary"
+                />
+                <img
+                  src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                  alt=""
+                  className="w-full cursor-pointer border hover:border-primary"
+                />
+                <img
+                  src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                  alt=""
+                  className="w-full cursor-pointer border hover:border-primary"
+                />
+                <img
+                  src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                  alt=""
+                  className="w-full cursor-pointer border hover:border-primary"
+                />
+                <img
+                  src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                  alt=""
+                  className="w-full cursor-pointer border hover:border-primary"
+                />
+                <img
+                  src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                  alt=""
+                  className="w-full cursor-pointer border hover:border-primary"
+                />
+                <img
+                  src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                  alt=""
+                  className="w-full cursor-pointer border hover:border-primary"
+                />
               </div>
-            </div> */}
+            </div>
 
             <div>
               <h3 className="text-xl font-medium uppercase mb-2">
@@ -257,6 +288,9 @@ const SingleProduct = () => {
                   <i className="fab fa-instagram"></i>
                 </a>
               </div>
+            </div>
+            <div className="w-[70%] mx-auto">
+              <TeamCard />
             </div>
           </div>
 
