@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { listProducts } from "../../redux/apiCalls";
-import "./new.scss";
+import "./new.css";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import { useState } from "react";
 import { productInputs, userInputs } from "../../formSource";

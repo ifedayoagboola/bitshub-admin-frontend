@@ -1,15 +1,13 @@
 import Sidebar from "../components/sidebar/Sidebar";
 import Navbar from "../components/navbar/Navbar";
-import "./dashboard.scss";
+import "./dashboard.css";
 
 const Dashboard = ({ children }) => {
   return (
-    <div className="home">
+    <div className="dashboard">
+      <Navbar />
       <Sidebar />
-      <div className="homeContainer">
-        <Navbar />
-        {children}
-      </div>
+      <div className="child">{children}</div>
     </div>
   );
 };

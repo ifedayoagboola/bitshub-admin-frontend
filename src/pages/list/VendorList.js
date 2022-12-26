@@ -1,4 +1,4 @@
-import "./list.scss";
+import "../../styles/list.css";
 import Datatable from "../../components/datatable/Datatable";
 import { userColumns, userRows } from "../../datatablesource";
 import { useState } from "react";

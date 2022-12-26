@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const Breadcrumbs = (props) => {
   const { page, secondary } = props;
   return (
-    <div className="container py-4 flex items-center gap-3">
+    <div className="p-4 flex items-center gap-3">
       <Link to="/" className="text-primary text-base">
         <i className="fas fa-home"></i>
       </Link>
@@ -13,7 +13,11 @@ const Breadcrumbs = (props) => {
         <i className="fas fa-chevron-right"></i>
       </span>
 
-      <p className={`font-medium ${secondary ? " text-white" : "text-primary"}`}>{page}</p>
+      <p
+        className={`font-medium ${secondary ? " text-white" : "text-primary"}`}
+      >
+        {page}
+      </p>
     </div>
   );
 };
