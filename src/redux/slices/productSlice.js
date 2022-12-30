@@ -34,6 +34,33 @@ export const productDetails = createAsyncThunk(
   }
 );
 
+export const updateProduct = createAsyncThunk(
+  "products/updateProduct",
+  async (values, { rejectWithValue, getState }) => {
+    const {
+      userSignin: { userInfo },
+    } = getState();
+    try {
+      const { data } = await Axios.put(
+        `${BASE_URL}/api/products/${values.id}/update`,
+        values,
+        {
+          headers: {
+            authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
+      return data;
+    } catch (error) {
+      const err =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      return rejectWithValue(err);
+    }
+  }
+);
+
 const initialState = {
   loading: false,
   error: false,
@@ -67,6 +94,18 @@ export const productSlice = createSlice({
       state.product = action?.payload;
     },
     [productDetails.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action?.payload;
+    },
+    [updateProduct.pending]: (state) => {
+      state.loading = true;
+      state.error = false;
+    },
+    [updateProduct.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.product = action?.payload;
+    },
+    [updateProduct.rejected]: (state, action) => {
       state.loading = false;
       state.error = action?.payload;
     },

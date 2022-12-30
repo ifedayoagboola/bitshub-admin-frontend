@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import "./new.css";
-import { productDetails } from "../../redux/slices/productSlice";
+import { productDetails, updateProduct } from "../../redux/slices/productSlice";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingBox from "../../components/LoadingBox";
 import MessageBox from "../../components/MessageBox";
 import Button from "../../components/Button";
 import { Link } from "react-router-dom";
+import { signin } from "../../redux/slices/userSlice";
 
 const EditProduct = () => {
   const [name, setName] = useState("");
@@ -27,15 +28,39 @@ const EditProduct = () => {
 
   const details = useSelector((state) => state?.singleProduct);
   const { loading, error, product } = details;
+
+  const update = useSelector((state) => state?.productUpdate);
+  const {} = update;
+
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
 
   const submitHandler = (e) => {
     e.preventDefault();
+    dispatch(
+      updateProduct({
+        id,
+        name,
+        availability,
+        brand,
+        category,
+        sku,
+        price,
+        brief,
+        size,
+        color,
+        description,
+        config,
+        quantityInStock,
+      })
+    );
   };
+  const email = "admin@email.com";
+  const password = "1234";
 
   useEffect(() => {
+    dispatch(signin({ email, password }));
     if (product && product?.product?._id === id) {
       setName(product?.product?.name);
       setAvailability(product?.product?.availability);
@@ -188,7 +213,7 @@ const EditProduct = () => {
                       Price <span className="text-red-500">*</span>
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       id="price"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
@@ -294,7 +319,7 @@ const EditProduct = () => {
                   </div>
                 </div>
                 <div className="w-[200px]">
-                  <Button primary className="w-full p-2">
+                  <Button type="submit" primary className="w-full p-2">
                     Send
                   </Button>
                 </div>
