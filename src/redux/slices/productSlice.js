@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Axios from "axios";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
+// const BASE_URL = "http://localhost:4000";
 
 export const listProducts = createAsyncThunk(
   "products/listProducts",
@@ -36,14 +37,14 @@ export const productDetails = createAsyncThunk(
 
 export const updateProduct = createAsyncThunk(
   "products/updateProduct",
-  async (values, { rejectWithValue, getState }) => {
+  async (product, { rejectWithValue, getState }) => {
     const {
       userSignin: { userInfo },
     } = getState();
     try {
       const { data } = await Axios.put(
-        `${BASE_URL}/api/products/${values.id}/update`,
-        values,
+        `${BASE_URL}/api/products/${product.id}/update`,
+        product,
         {
           headers: {
             authorization: `Bearer ${userInfo.token}`,
@@ -61,9 +62,34 @@ export const updateProduct = createAsyncThunk(
   }
 );
 
+export const createProduct = createAsyncThunk(
+  "products/createProduct",
+  async (product, { rejectWithValue, getState }) => {
+    const {
+      userSignin: { userInfo },
+    } = getState();
+    try {
+      const { data } = await Axios.post(`${BASE_URL}/api/products`, product, {
+        headers: {
+          authorization: `Bearer ${userInfo.token}`,
+        },
+      });
+      return data;
+    } catch (error) {
+      const err =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      return rejectWithValue(err);
+    }
+  }
+);
+
 const initialState = {
   loading: false,
   error: false,
+  updateSuccess: false,
+  postSuccess: false,
   products: [],
   product: {},
 };
@@ -71,7 +97,11 @@ const initialState = {
 export const productSlice = createSlice({
   name: "products",
   initialState,
-  reducers: {},
+  reducers: {
+    productUpdateReset: (state) => {
+      state.product = {};
+    },
+  },
   extraReducers: {
     [listProducts.pending]: (state) => {
       state.loading = true;
@@ -101,11 +131,23 @@ export const productSlice = createSlice({
       state.loading = true;
       state.error = false;
     },
-    [updateProduct.fulfilled]: (state, action) => {
+    [updateProduct.fulfilled]: (state) => {
       state.loading = false;
-      state.product = action?.payload;
+      state.updateSuccess = true;
     },
     [updateProduct.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action?.payload;
+    },
+    [createProduct.pending]: (state) => {
+      state.loading = true;
+      state.error = false;
+    },
+    [createProduct.fulfilled]: (state) => {
+      state.loading = false;
+      state.postSuccess = true;
+    },
+    [createProduct.rejected]: (state, action) => {
       state.loading = false;
       state.error = action?.payload;
     },
@@ -114,5 +156,6 @@ export const productSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const { reducer, actions } = productSlice;
+export const { productUpdateReset } = actions;
 
 export default reducer;

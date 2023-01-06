@@ -3,15 +3,23 @@ import Axios from "axios";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 // const BASE_URL = "http://localhost:4000";
 
-export const signin = createAsyncThunk(
-  "users/signin",
-  async (credentials, { rejectWithValue }) => {
+export const uploadImage = createAsyncThunk(
+  "product/upload",
+  async (bodyFormData, { rejectWithValue, getState }) => {
+    const {
+      userSignin: { userInfo },
+    } = getState();
     try {
       const { data } = await Axios.post(
-        `${BASE_URL}/api/users/signin`,
-        credentials
+        `${BASE_URL}/api/upload`,
+        bodyFormData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            authorization: `Bearer ${userInfo.token}`,
+          },
+        }
       );
-      localStorage.setItem("userInfo", JSON.stringify(data));
       return data;
     } catch (error) {
       const err =
@@ -26,23 +34,25 @@ export const signin = createAsyncThunk(
 const initialState = {
   loading: false,
   error: false,
-  userInfo: {},
+  uploadSuccess: false,
+  imageUrl: {},
 };
 
-export const userSlice = createSlice({
+export const uploadSlice = createSlice({
   name: "user",
   initialState,
   reducers: {},
   extraReducers: {
-    [signin.pending]: (state) => {
+    [uploadImage.pending]: (state) => {
       state.loading = true;
       state.error = false;
     },
-    [signin.fulfilled]: (state, action) => {
+    [uploadImage.fulfilled]: (state, action) => {
       state.loading = false;
-      state.userInfo = action?.payload;
+      state.uploadSuccess = true;
+      state.imageUrl = action?.payload;
     },
-    [signin.rejected]: (state, action) => {
+    [uploadImage.rejected]: (state, action) => {
       state.loading = false;
       state.error = action?.payload;
     },
@@ -50,6 +60,6 @@ export const userSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { reducer, actions } = userSlice;
+export const { reducer, actions } = uploadSlice;
 
 export default reducer;
