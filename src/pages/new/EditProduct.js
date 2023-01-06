@@ -1,20 +1,29 @@
 import { useEffect, useState } from "react";
+import Axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import "./new.css";
-import { productDetails, updateProduct } from "../../redux/slices/productSlice";
-import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
+import {
+  createProduct,
+  productDetails,
+  updateProduct,
+} from "../../redux/slices/productSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingBox from "../../components/LoadingBox";
 import MessageBox from "../../components/MessageBox";
 import Button from "../../components/Button";
-import { Link } from "react-router-dom";
 import { signin } from "../../redux/slices/userSlice";
+import { toast } from "react-toastify";
+import { uploadImage } from "../../redux/slices/uploadSlice";
 
 const EditProduct = () => {
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
+  // const BASE_URL = "http://localhost:4000";
+
   const [name, setName] = useState("");
   const [availability, setAvailability] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
+  const [image, setImage] = useState("");
   const [sku, setSku] = useState("");
   const [price, setPrice] = useState("");
   const [brief, setBrief] = useState("");
@@ -24,43 +33,41 @@ const EditProduct = () => {
   const [config, setConfig] = useState("");
   const [quantityInStock, setQuantityInStock] = useState("");
 
-  const [file, setFile] = useState("");
+  const [loadingUpload, setLoadingUpload] = useState(false);
+  const [errorUpload, setErrorUpload] = useState("");
+
+  const userSignin = useSelector((state) => state.userSignin);
+  const { userInfo } = userSignin;
 
   const details = useSelector((state) => state?.singleProduct);
   const { loading, error, product } = details;
 
   const update = useSelector((state) => state?.productUpdate);
-  const {} = update;
+  const { loading: updateLoading, error: updateError, updateSuccess } = update;
+
+  const create = useSelector((state) => state?.createProduct);
+  const { loading: createLoading, error: createError, createSuccess } = create;
+
+  // const upload = useSelector((state) => state?.uploadProductImages);
+  // const {
+  //   loading: uploadLoading,
+  //   error: uploadError,
+  //   uploadSuccess,
+  //   imageUrl,
+  // } = upload;
+
+  const customId = "custom-id-yes";
 
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    dispatch(
-      updateProduct({
-        id,
-        name,
-        availability,
-        brand,
-        category,
-        sku,
-        price,
-        brief,
-        size,
-        color,
-        description,
-        config,
-        quantityInStock,
-      })
-    );
-  };
   const email = "admin@email.com";
   const password = "1234";
 
   useEffect(() => {
     dispatch(signin({ email, password }));
+
     if (product && product?.product?._id === id) {
       setName(product?.product?.name);
       setAvailability(product?.product?.availability);
@@ -75,11 +82,107 @@ const EditProduct = () => {
       setConfig(product?.product?.config);
       setQuantityInStock(product?.product?.quantityInStock);
     } else if (id && product?.product?._id !== id) {
+      // dispatch(productUpdateReset());
       dispatch(productDetails(id));
     } else {
       return;
     }
   }, [dispatch, id, product]);
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    if (id && product?.product?._id === id) {
+      dispatch(
+        updateProduct({
+          id,
+          name,
+          availability,
+          brand,
+          image,
+          category,
+          sku,
+          price,
+          brief,
+          size,
+          color,
+          description,
+          config,
+          quantityInStock,
+        })
+      );
+    } else if (!id) {
+      dispatch(
+        createProduct({
+          name,
+          availability,
+          brand,
+          image,
+          category,
+          model: sku,
+          price,
+          brief,
+          size,
+          color,
+          desc: description,
+          config,
+          quantityInStock,
+        })
+      );
+    }
+
+    if (updateSuccess) {
+      toast.success("Product updated successfully", {
+        toastId: customId,
+      });
+    } else if (updateError) {
+      toast.error(updateError, {
+        toastId: customId,
+      });
+    }
+    if (createSuccess) {
+      toast.success("Product created successfully", {
+        toastId: customId,
+      });
+    } else if (createError) {
+      toast.error(createError, {
+        toastId: customId,
+      });
+    }
+  };
+
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    const bodyFormData = new FormData();
+    bodyFormData.append("file", file);
+    setLoadingUpload(true);
+    try {
+      const { data } = await Axios.post(
+        `${BASE_URL}/api/upload`,
+        bodyFormData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
+      setImage(data?.secure_url);
+      setLoadingUpload(false);
+      toast.success("Image uploaded successfully", {
+        toastId: customId,
+      });
+    } catch (error) {
+      const err =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      setErrorUpload(err);
+      setLoadingUpload(false);
+      toast.error(err, {
+        toastId: customId,
+      });
+    }
+  };
 
   return (
     <div className="">
@@ -102,35 +205,49 @@ const EditProduct = () => {
         </div>
 
         <div className="">
-          {/* <div className="">
-            <img
-              src={
-                file
-                  ? URL.createObjectURL(file)
-                  : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-              }
-              alt=""
-            />
-          </div> */}
           <div className="mt-8">
+            {updateLoading && <LoadingBox />}
+            {updateError && (
+              <MessageBox variant="danger">{updateError}</MessageBox>
+            )}
             {loading ? (
               <LoadingBox />
             ) : error ? (
-              <MessageBox>{error}</MessageBox>
+              <MessageBox variant="danger">{error}</MessageBox>
             ) : (
               <form onSubmit={submitHandler}>
                 <div className="flex md:flex-row flex-col gap-4 mb-4">
-                  <div className="text-gray-600 block">
-                    <label htmlFor="file">
-                      Image: <DriveFolderUploadOutlinedIcon className="icon" />
-                    </label>
-                    <input
-                      type="file"
-                      id="file"
-                      value=""
-                      onChange={(e) => setFile(e.target.files[0])}
-                      // style={{ display: "none" }}
-                    />
+                  <div className="text-gray-600 block text-sm">
+                    <label htmlFor="image">Images</label>
+                    {loadingUpload ? (
+                      <div>
+                        <i className="fa fa-spinner fa-spin"></i>Loading...
+                      </div>
+                    ) : (
+                      // <input
+                      //   className="text-xs p-2"
+                      //   value={image}
+                      //   onChange={(e) => {
+                      //     setImage(e.target.value);
+                      //   }}
+                      //       />
+                      <div className="w-[200px] h-[200px]">
+                        <img
+                          className="w-full"
+                          src={product?.product?.image || image}
+                          alt="productImage"
+                        />
+                      </div>
+                    )}
+
+                    <div>
+                      <label htmlFor="file">Upload Image</label>
+                      <input
+                        type="file"
+                        id="file"
+                        onChange={uploadFileHandler}
+                      />
+                    </div>
                   </div>
                   <div className="w-full">
                     <label htmlFor="name" className="text-gray-600 mb-2 block">
@@ -156,7 +273,7 @@ const EditProduct = () => {
                     </label>
                     <input
                       type="text"
-                      id="name"
+                      id="availability"
                       value={availability}
                       onChange={(e) => setAvailability(e.target.value)}
                       placeholder="Enter product Availability"
@@ -170,7 +287,7 @@ const EditProduct = () => {
                     </label>
                     <input
                       type="text"
-                      id="name"
+                      id="brand"
                       value={brand}
                       onChange={(e) => setBrand(e.target.value)}
                       placeholder="Enter brand name"
@@ -180,7 +297,10 @@ const EditProduct = () => {
                 </div>
                 <div className="flex md:flex-row flex-col gap-4 mb-4">
                   <div className="w-full">
-                    <label htmlFor="" className="text-gray-600 mb-2 block">
+                    <label
+                      htmlFor="category"
+                      className="text-gray-600 mb-2 block"
+                    >
                       Category <span className="text-red-500">*</span>
                     </label>
                     <input
