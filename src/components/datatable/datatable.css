@@ -26,11 +26,11 @@
   align-items: center;
 }
 .datatable .cellWithImg .cellImg {
-  width: 32px;
-  height: 32px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   margin-right: 20px;
 }
 .datatable .cellWithStatus {

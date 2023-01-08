@@ -11,6 +11,7 @@ export const store = configureStore({
     singleProduct: productSlice.reducer,
     productUpdate: productSlice.reducer,
     createProduct: productSlice.reducer,
+    deleteProduct: productSlice.reducer,
     userSignin: userSlice.reducer,
     uploadProductImages: uploadSlice.reducer,
   },
