@@ -1,12 +1,47 @@
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import "./datatable.css";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
+import { deleteProduct } from "../../redux/slices/productSlice";
+import CenterModal from "../modals/CenterModal";
+import DeleteProductModal from "../modals/DeleteProductModal";
+import { toast } from "react-toastify";
 
 const Datatable = ({ title, url, data, actionColumn }) => {
+  const [idArray, setIdArray] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+
+  const dispatch = useDispatch();
+  const customId = "custom-id-yes";
+
+  const handleBulkDelete = () => {
+    if (idArray.length < 1) {
+      toast.error("No item selected!", {
+        toastId: customId,
+      });
+    } else {
+      setOpenModal(!openModal);
+    }
+  };
+  const deleteAction = () => {
+    idArray.forEach((id) => {
+      dispatch(deleteProduct(id));
+    });
+    setOpenModal(!openModal);
+  };
   return (
     <div className="datatable">
       <div className="datatableTitle">
-        {title}
+        <div>
+          {title}
+          <button
+            onClick={handleBulkDelete}
+            className="ml-2 text-base text-red-500 p-2 bg-transparent border border-red-500 rounded"
+          >
+            Bulk Delete
+          </button>
+        </div>
         {url ? (
           <Link to={url} className="link">
             New Product
@@ -23,7 +58,18 @@ const Datatable = ({ title, url, data, actionColumn }) => {
         pageSize={9}
         rowsPerPageOptions={[9]}
         checkboxSelection
+        onSelectionModelChange={(data) => {
+          setIdArray(data);
+        }}
       />
+      {openModal && (
+        <CenterModal modalHandler={handleBulkDelete}>
+          <DeleteProductModal
+            action={deleteAction}
+            modalHandler={handleBulkDelete}
+          />
+        </CenterModal>
+      )}
     </div>
   );
 };
