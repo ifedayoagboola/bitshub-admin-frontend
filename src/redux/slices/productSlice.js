@@ -1,7 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Axios from "axios";
+import { toast } from "react-toastify";
+
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 // const BASE_URL = "http://localhost:4000";
+const customId = "custom-id-yes";
 
 export const listProducts = createAsyncThunk(
   "products/listProducts",
@@ -84,12 +87,41 @@ export const createProduct = createAsyncThunk(
     }
   }
 );
+export const deleteProduct = createAsyncThunk(
+  "products/deleteProduct",
+  async (productId, { rejectWithValue, getState }) => {
+    const {
+      userSignin: { userInfo },
+    } = getState();
+    try {
+      await Axios.delete(`${BASE_URL}/api/products/${productId}/delete`, {
+        headers: {
+          authorization: `Bearer ${userInfo.token}`,
+        },
+      });
+      toast.success("Product successfully deleted!", {
+        toastId: customId,
+      });
+    } catch (error) {
+      const err =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+
+      toast.error(err, {
+        toastId: customId,
+      });
+      return rejectWithValue(err);
+    }
+  }
+);
 
 const initialState = {
   loading: false,
   error: false,
   updateSuccess: false,
   postSuccess: false,
+  deleteSuccess: false,
   products: [],
   product: {},
 };
@@ -148,6 +180,18 @@ export const productSlice = createSlice({
       state.postSuccess = true;
     },
     [createProduct.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action?.payload;
+    },
+    [deleteProduct.pending]: (state) => {
+      state.loading = true;
+      state.error = false;
+    },
+    [deleteProduct.fulfilled]: (state) => {
+      state.loading = false;
+      state.deleteSuccess = true;
+    },
+    [deleteProduct.rejected]: (state, action) => {
       state.loading = false;
       state.error = action?.payload;
     },

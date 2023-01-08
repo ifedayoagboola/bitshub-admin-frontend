@@ -29,7 +29,7 @@ const SingleProduct = () => {
   useEffect(() => {
     dispatch(productDetails(productId));
   }, [dispatch, productId]);
-
+  console.log(product);
   return (
     <div>
       {loading ? (
@@ -40,35 +40,35 @@ const SingleProduct = () => {
         <div className="p-4">
           <Breadcrumbs page="Product view" />
           <div className="flex flex-col lg:flex-row gap-3">
-            <div className="w-[100%] lg:w-[35%]">
+            <div className="w-[100%] h-[300px] lg:w-[35%]">
               <img
-                src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-                alt={product?.name}
-                className="border rounded-md w-full"
+                src={product?.product?.image}
+                alt={product?.product?.name}
+                className="border rounded-md w-full h-full"
               />
               <div className="grid grid-cols-5 gap-4 mt-4">
                 <img
-                  src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-                  alt={product?.name}
-                  className="w-full cursor-pointer border hover:border-primary border rounded-md"
+                  src={product?.product?.image}
+                  alt={product?.product?.name}
+                  className="w-full h-full cursor-pointer border hover:border-primary border rounded-md"
                 />
                 <img
-                  src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                  src={product?.product?.image}
                   alt=""
                   className="w-full cursor-pointer border hover:border-primary border rounded-md"
                 />
                 <img
-                  src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                  src={product?.product?.image}
                   alt=""
                   className="w-full cursor-pointer border hover:border-primary border rounded-md"
                 />
                 <img
-                  src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                  src={product?.product?.image}
                   alt=""
                   className="w-full cursor-pointer border hover:border-primary border rounded-md"
                 />
                 <img
-                  src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                  src={product?.product?.image}
                   alt=""
                   className="w-full cursor-pointer border hover:border-primary border rounded-md"
                 />

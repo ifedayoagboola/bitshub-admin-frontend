@@ -3,10 +3,15 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import "../../styles/list.css";
 import Datatable from "../../components/datatable/Datatable";
-import { listProducts } from "../../redux/slices/productSlice";
+import { deleteProduct, listProducts } from "../../redux/slices/productSlice";
+import LoadingBox from "../../components/LoadingBox";
 
 const ProductList = () => {
   const { products, loading, error } = useSelector((state) => state.products);
+  // const deleteSuccess = useSelector((state) =>
+  //   console.log(state.deleteProduct)
+  // );
+  // console.log(deleteSuccess);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -14,7 +19,8 @@ const ProductList = () => {
   }, [dispatch]);
 
   const handleDelete = (id) => {
-    // setData(data.filter((item) => item.id !== id));
+    dispatch(deleteProduct(id));
+    // console.log(id);
   };
 
   const userColumns = [
@@ -25,11 +31,7 @@ const ProductList = () => {
       renderCell: (params) => {
         return (
           <div className="cellWithImg">
-            <img
-              className="cellImg"
-              src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-              alt="avatar"
-            />
+            <img className="cellImg" src={params.row.image} alt="avatar" />
           </div>
         );
       },
@@ -135,7 +137,7 @@ const ProductList = () => {
   return (
     <div className="list">
       <div className="listContainer">
-        {loading && <div>Loading ... </div>}
+        {loading && <LoadingBox />}
         {error && <div>{error} </div>}
         {products.length > 0 && (
           <Datatable
