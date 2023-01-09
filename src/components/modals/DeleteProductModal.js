@@ -19,7 +19,7 @@ const DeleteProductModal = (props) => {
         </div>
       </div>
       <div className="py-4">
-        <p className="text-sm">
+        <p className="text-xs">
           By clicking 'YES', product will be permanently deleted!
         </p>
         <p className="text-base">Are you sure you want to delete product(s)?</p>

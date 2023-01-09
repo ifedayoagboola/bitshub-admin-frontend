@@ -16,13 +16,7 @@ const Datatable = ({ title, url, data, actionColumn }) => {
   const customId = "custom-id-yes";
 
   const handleBulkDelete = () => {
-    if (idArray.length < 1) {
-      toast.error("No item selected!", {
-        toastId: customId,
-      });
-    } else {
-      setOpenModal(!openModal);
-    }
+    setOpenModal(!openModal);
   };
   const deleteAction = () => {
     idArray.forEach((id) => {
@@ -35,12 +29,14 @@ const Datatable = ({ title, url, data, actionColumn }) => {
       <div className="datatableTitle">
         <div>
           {title}
-          <button
-            onClick={handleBulkDelete}
-            className="ml-2 text-base text-red-500 p-2 bg-transparent border border-red-500 rounded"
-          >
-            Bulk Delete
-          </button>
+          {idArray.length > 0 && (
+            <button
+              onClick={handleBulkDelete}
+              className="ml-2 text-base text-red-500 p-2 bg-transparent border border-red-500 rounded"
+            >
+              Bulk Delete
+            </button>
+          )}
         </div>
         {url ? (
           <Link to={url} className="link">
