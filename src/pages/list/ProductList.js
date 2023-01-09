@@ -1,17 +1,22 @@
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import "../../styles/list.css";
 import Datatable from "../../components/datatable/Datatable";
 import { deleteProduct, listProducts } from "../../redux/slices/productSlice";
 import LoadingBox from "../../components/LoadingBox";
+import CenterModal from "../../components/modals/CenterModal";
+import DeleteProductModal from "../../components/modals/DeleteProductModal";
 
 const ProductList = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const [productId, setProductId] = useState("");
+
   const { products, loading, error } = useSelector((state) => state.products);
-  // const deleteSuccess = useSelector((state) =>
-  //   console.log(state.deleteProduct)
-  // );
-  // console.log(deleteSuccess);
+  const { loading: deleteLoading } = useSelector(
+    (state) => state.deleteProduct
+  );
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -19,8 +24,12 @@ const ProductList = () => {
   }, [dispatch]);
 
   const handleDelete = (id) => {
-    dispatch(deleteProduct(id));
-    // console.log(id);
+    setOpenModal(!openModal);
+    setProductId(id);
+  };
+  const deleteAction = () => {
+    dispatch(deleteProduct(productId));
+    setOpenModal(!openModal);
   };
 
   const userColumns = [
@@ -41,12 +50,7 @@ const ProductList = () => {
       headerName: "Name",
       width: 150,
       renderCell: (params) => {
-        return (
-          <div className="cellWithImg">
-            {/* <img className="cellImg" src={params.row.img} alt="avatar" /> */}
-            {params.row.name}
-          </div>
-        );
+        return <div className="cellWithImg">{params.row.name}</div>;
       },
     },
     {
@@ -138,6 +142,7 @@ const ProductList = () => {
     <div className="list">
       <div className="listContainer">
         {loading && <LoadingBox />}
+        {deleteLoading && <LoadingBox />}
         {error && <div>{error} </div>}
         {products.length > 0 && (
           <Datatable
@@ -148,6 +153,14 @@ const ProductList = () => {
           />
         )}
       </div>
+      {openModal && (
+        <CenterModal modalHandler={handleDelete}>
+          <DeleteProductModal
+            action={deleteAction}
+            modalHandler={handleDelete}
+          />
+        </CenterModal>
+      )}
     </div>
   );
 };

@@ -29,7 +29,6 @@ const SingleProduct = () => {
   useEffect(() => {
     dispatch(productDetails(productId));
   }, [dispatch, productId]);
-  console.log(product);
   return (
     <div>
       {loading ? (
