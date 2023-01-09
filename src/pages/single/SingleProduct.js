@@ -8,6 +8,7 @@ import Rating from "../../components/Rating";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import avatar from "../../assets/avatar.jpeg";
 import TeamCard from "../../components/TeamCard";
+import CenterModal from "../../components/modals/CenterModal";
 
 const SingleProduct = () => {
   const [showDetails, setShowDetails] = useState(true);
@@ -32,7 +33,9 @@ const SingleProduct = () => {
   return (
     <div>
       {loading ? (
-        <LoadingBox>Loading...</LoadingBox>
+        <CenterModal className="bg-transparent text-white">
+          <LoadingBox />
+        </CenterModal>
       ) : error ? (
         <MessageBox variant="danger">{error}</MessageBox>
       ) : (
