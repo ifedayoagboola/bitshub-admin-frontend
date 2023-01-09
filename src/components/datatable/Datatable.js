@@ -6,14 +6,12 @@ import { Link } from "react-router-dom";
 import { deleteProduct } from "../../redux/slices/productSlice";
 import CenterModal from "../modals/CenterModal";
 import DeleteProductModal from "../modals/DeleteProductModal";
-import { toast } from "react-toastify";
 
 const Datatable = ({ title, url, data, actionColumn }) => {
   const [idArray, setIdArray] = useState([]);
   const [openModal, setOpenModal] = useState(false);
 
   const dispatch = useDispatch();
-  const customId = "custom-id-yes";
 
   const handleBulkDelete = () => {
     setOpenModal(!openModal);

@@ -3,25 +3,44 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import "../../styles/list.css";
 import Datatable from "../../components/datatable/Datatable";
-import { deleteProduct, listProducts } from "../../redux/slices/productSlice";
+import {
+  deleteProduct,
+  listProducts,
+  productReset,
+} from "../../redux/slices/productSlice";
 import LoadingBox from "../../components/LoadingBox";
 import CenterModal from "../../components/modals/CenterModal";
 import DeleteProductModal from "../../components/modals/DeleteProductModal";
+import { signin } from "../../redux/slices/userSlice";
+import MessageBox from "../../components/MessageBox";
 
 const ProductList = () => {
   const [openModal, setOpenModal] = useState(false);
   const [productId, setProductId] = useState("");
 
   const { products, loading, error } = useSelector((state) => state.products);
-  const { loading: deleteLoading } = useSelector(
+  const { loading: deleteLoading, deleteSuccess } = useSelector(
     (state) => state.deleteProduct
   );
+  const update = useSelector((state) => state?.productUpdate);
+  const { updateSuccess } = update;
+
+  const create = useSelector((state) => state?.createProduct);
+  const { postSuccess } = create;
 
   const dispatch = useDispatch();
+  const email = "admin@email.com";
+  const password = "1234";
 
   useEffect(() => {
-    dispatch(listProducts());
-  }, [dispatch]);
+    dispatch(signin({ email, password }));
+
+    if (deleteSuccess || updateSuccess || postSuccess) {
+      dispatch(productReset());
+    } else {
+      dispatch(listProducts());
+    }
+  }, [dispatch, deleteSuccess, postSuccess, updateSuccess]);
 
   const handleDelete = (id) => {
     setOpenModal(!openModal);
@@ -141,9 +160,7 @@ const ProductList = () => {
   return (
     <div className="list">
       <div className="listContainer">
-        {loading && <LoadingBox />}
-        {deleteLoading && <LoadingBox />}
-        {error && <div>{error} </div>}
+        {error && <MessageBox variant="danger">{error}</MessageBox>}
         {products.length > 0 && (
           <Datatable
             title="All Products"
@@ -153,8 +170,28 @@ const ProductList = () => {
           />
         )}
       </div>
+      {deleteLoading && (
+        <CenterModal
+          modalHandler={deleteLoading}
+          className="bg-transparent text-white"
+        >
+          <LoadingBox />
+        </CenterModal>
+      )}
+      {loading && (
+        <CenterModal
+          modalHandler={loading}
+          className="bg-transparent text-white"
+        >
+          <LoadingBox />
+        </CenterModal>
+      )}
+
       {openModal && (
-        <CenterModal modalHandler={handleDelete}>
+        <CenterModal
+          modalHandler={handleDelete}
+          className="bg-transparent text-white"
+        >
           <DeleteProductModal
             action={deleteAction}
             modalHandler={handleDelete}

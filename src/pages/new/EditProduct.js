@@ -3,17 +3,16 @@ import Axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import "./new.css";
 import {
-  createProduct,
   productDetails,
+  productReset,
   updateProduct,
 } from "../../redux/slices/productSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import LoadingBox from "../../components/LoadingBox";
 import MessageBox from "../../components/MessageBox";
 import Button from "../../components/Button";
-import { signin } from "../../redux/slices/userSlice";
 import { toast } from "react-toastify";
-import { uploadImage } from "../../redux/slices/uploadSlice";
+import CenterModal from "../../components/modals/CenterModal";
 
 const EditProduct = () => {
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -45,30 +44,21 @@ const EditProduct = () => {
   const update = useSelector((state) => state?.productUpdate);
   const { loading: updateLoading, error: updateError, updateSuccess } = update;
 
-  const create = useSelector((state) => state?.createProduct);
-  const { loading: createLoading, error: createError, createSuccess } = create;
-
-  // const upload = useSelector((state) => state?.uploadProductImages);
-  // const {
-  //   loading: uploadLoading,
-  //   error: uploadError,
-  //   uploadSuccess,
-  //   imageUrl,
-  // } = upload;
-
   const customId = "custom-id-yes";
 
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const email = "admin@email.com";
-  const password = "1234";
-
   useEffect(() => {
-    dispatch(signin({ email, password }));
+    if (updateSuccess) {
+      navigate("/products");
+    }
 
-    if (product && product?.product?._id === id) {
+    if (!product || product?.product?._id !== id || updateSuccess) {
+      dispatch(productReset());
+      dispatch(productDetails(id));
+    } else {
       setName(product?.product?.name);
       setAvailability(product?.product?.availability);
       setBrand(product?.product?.brand);
@@ -81,73 +71,30 @@ const EditProduct = () => {
       setDescription(product?.product?.desc);
       setConfig(product?.product?.config);
       setQuantityInStock(product?.product?.quantityInStock);
-    } else if (id && product?.product?._id !== id) {
-      // dispatch(productUpdateReset());
-      dispatch(productDetails(id));
-    } else {
-      return;
     }
-  }, [dispatch, id, product]);
+  }, [dispatch, id, product, navigate, updateSuccess]);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    if (id && product?.product?._id === id) {
-      dispatch(
-        updateProduct({
-          id,
-          name,
-          availability,
-          brand,
-          image,
-          category,
-          sku,
-          price,
-          brief,
-          size,
-          color,
-          description,
-          config,
-          quantityInStock,
-        })
-      );
-    } else if (!id) {
-      dispatch(
-        createProduct({
-          name,
-          availability,
-          brand,
-          image,
-          category,
-          model: sku,
-          price,
-          brief,
-          size,
-          color,
-          desc: description,
-          config,
-          quantityInStock,
-        })
-      );
-    }
 
-    if (updateSuccess) {
-      toast.success("Product updated successfully", {
-        toastId: customId,
-      });
-    } else if (updateError) {
-      toast.error(updateError, {
-        toastId: customId,
-      });
-    }
-    if (createSuccess) {
-      toast.success("Product created successfully", {
-        toastId: customId,
-      });
-    } else if (createError) {
-      toast.error(createError, {
-        toastId: customId,
-      });
-    }
+    dispatch(
+      updateProduct({
+        id,
+        name,
+        availability,
+        brand,
+        image,
+        category,
+        sku,
+        price,
+        brief,
+        size,
+        color,
+        description,
+        config,
+        quantityInStock,
+      })
+    );
   };
 
   const uploadFileHandler = async (e) => {
@@ -206,12 +153,18 @@ const EditProduct = () => {
 
         <div className="">
           <div className="mt-8">
-            {updateLoading && <LoadingBox />}
+            {updateLoading && (
+              <CenterModal className="bg-transparent text-white">
+                <LoadingBox />
+              </CenterModal>
+            )}
             {updateError && (
               <MessageBox variant="danger">{updateError}</MessageBox>
             )}
             {loading ? (
-              <LoadingBox />
+              <CenterModal className="bg-transparent text-white">
+                <LoadingBox />
+              </CenterModal>
             ) : error ? (
               <MessageBox variant="danger">{error}</MessageBox>
             ) : (
@@ -224,13 +177,6 @@ const EditProduct = () => {
                         <i className="fa fa-spinner fa-spin"></i>Loading...
                       </div>
                     ) : (
-                      // <input
-                      //   className="text-xs p-2"
-                      //   value={image}
-                      //   onChange={(e) => {
-                      //     setImage(e.target.value);
-                      //   }}
-                      //       />
                       <div className="w-[200px] h-[200px]">
                         <img
                           className="w-full"
@@ -439,8 +385,15 @@ const EditProduct = () => {
                   </div>
                 </div>
                 <div className="w-[200px]">
-                  <Button type="submit" primary className="w-full p-2">
-                    Send
+                  <Button
+                    disabled={updateLoading}
+                    type="submit"
+                    primary
+                    className="w-full p-2"
+                  >
+                    {updateLoading
+                      ? '<i className="fa fa-spinner fa-spin"></i>'
+                      : "Send"}
                   </Button>
                 </div>
               </form>

@@ -54,12 +54,18 @@ export const updateProduct = createAsyncThunk(
           },
         }
       );
-      return data;
+      toast.success("Product updated successfully", {
+        toastId: customId,
+      });
+      console.log(data);
     } catch (error) {
       const err =
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message;
+      toast.error(err, {
+        toastId: customId,
+      });
       return rejectWithValue(err);
     }
   }
@@ -77,12 +83,18 @@ export const createProduct = createAsyncThunk(
           authorization: `Bearer ${userInfo.token}`,
         },
       });
+      toast.success("Product created successfully", {
+        toastId: customId,
+      });
       return data;
     } catch (error) {
       const err =
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message;
+      toast.error(err, {
+        toastId: customId,
+      });
       return rejectWithValue(err);
     }
   }
@@ -130,8 +142,11 @@ export const productSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
-    productUpdateReset: (state) => {
-      state.product = {};
+    productReset: (state) => {
+      state.loading = false;
+      state.deleteSuccess = false;
+      state.postSuccess = false;
+      state.updateSuccess = false;
     },
   },
   extraReducers: {
@@ -200,6 +215,6 @@ export const productSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const { reducer, actions } = productSlice;
-export const { productUpdateReset } = actions;
+export const { productReset } = actions;
 
 export default reducer;

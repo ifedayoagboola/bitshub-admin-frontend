@@ -16,6 +16,7 @@ import SingleOrder from "./pages/single/SingleOrder";
 import NewVendor from "./pages/new/NewVendor";
 import VendorList from "./pages/list/VendorList";
 import SingleVendor from "./pages/single/SingleVendor";
+import NewProduct from "./pages/new/NewProduct";
 
 function App() {
   return (
@@ -92,7 +93,7 @@ function App() {
               path="new"
               element={
                 <Dashboard>
-                  <EditProduct />
+                  <NewProduct />
                 </Dashboard>
               }
             />
