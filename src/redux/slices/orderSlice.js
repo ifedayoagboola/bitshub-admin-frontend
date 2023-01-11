@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Axios from "axios";
+import { toast } from "react-toastify";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 // const BASE_URL = "http://localhost:4000";
+const customId = "custom-id-yes";
 
 export const listOrders = createAsyncThunk(
   "orders/listOrders",
@@ -37,12 +39,47 @@ export const orderDetails = createAsyncThunk(
           authorization: `Bearer ${userInfo.token}`,
         },
       });
+
       return data;
     } catch (error) {
       const err =
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message;
+
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const deliverOrder = createAsyncThunk(
+  "orders/deliver",
+  async (orderId, { rejectWithValue, getState }) => {
+    const {
+      userSignin: { userInfo },
+    } = getState();
+    try {
+      const { data } = await Axios.put(
+        `${BASE_URL}/api/orders/${orderId}/deliver`,
+        {},
+        {
+          headers: {
+            authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
+      toast.success("Order delivered successfully", {
+        toastId: customId,
+      });
+      return data;
+    } catch (error) {
+      const err =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      toast.error(err, {
+        toastId: customId,
+      });
       return rejectWithValue(err);
     }
   }
@@ -58,7 +95,12 @@ const initialState = {
 export const orderSlice = createSlice({
   name: "order",
   initialState,
-  reducers: {},
+  reducers: {
+    orderReset: (state) => {
+      state.loading = false;
+      state.error = false;
+    },
+  },
   extraReducers: {
     [listOrders.pending]: (state) => {
       state.loading = true;
@@ -84,10 +126,23 @@ export const orderSlice = createSlice({
       state.loading = false;
       state.error = action?.payload;
     },
+    [deliverOrder.pending]: (state) => {
+      state.loading = true;
+      state.error = false;
+    },
+    [deliverOrder.fulfilled]: (state, action) => {
+      state.loading = false;
+      state.order = action?.payload;
+    },
+    [deliverOrder.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action?.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
 export const { reducer, actions } = orderSlice;
+export const { orderReset } = actions;
 
 export default reducer;

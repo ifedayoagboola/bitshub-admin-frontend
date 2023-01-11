@@ -6,17 +6,31 @@ import Datatable from "../../components/datatable/Datatable";
 import LoadingBox from "../../components/LoadingBox";
 import CenterModal from "../../components/modals/CenterModal";
 import MessageBox from "../../components/MessageBox";
-import { orderDetails } from "../../redux/slices/orderSlice";
+import {
+  deliverOrder,
+  orderDetails,
+  orderReset,
+} from "../../redux/slices/orderSlice";
 import Breadcrumbs from "../../components/Breadcrumbs";
+import Button from "../../components/Button";
 
 const SingleOrder = () => {
   const { order, loading, error } = useSelector((state) => state.singleOrder);
+  const { order: delivered, loading: loadingDeliver } = useSelector(
+    (state) => state.deliverOrder
+  );
+
   const { orderId } = useParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(orderDetails(orderId));
-  }, [dispatch, orderId]);
+    dispatch(orderReset());
+  }, [dispatch, orderId, delivered]);
+
+  const deliverOrderHandler = () => {
+    dispatch(deliverOrder(orderId));
+  };
 
   const userColumns = [
     {
@@ -82,20 +96,18 @@ const SingleOrder = () => {
           <div className="flex items-center justify-center gap-4">
             <div
               className={`rounded p-1 text-base ${
-                order?.isPaid
-                  ? "bg-yellow-400 text-gray-800"
-                  : order?.isPaid && order?.isDelivered
+                order?.isPaid && order?.isDelivered
                   ? "bg-green-500 text-white"
+                  : order?.isPaid && !order?.isDelivered
+                  ? "bg-yellow-400 text-gray-800"
                   : "bg-gray-400 text-white"
               }`}
             >
-              {order?.isPaid
-                ? "Paid"
-                : order?.isPaid && order?.isDelivered
-                ? "Delivered"
+              {order?.isPaid && order?.isDelivered
+                ? `Delivered on: ${order?.deliveredAt.substring(0, 10)}`
                 : order?.isPaid && !order?.isDelivered
                 ? "Awaiting delivery"
-                : "Pending"}
+                : "Awaiting payment"}
             </div>
             <p>Order ID: # {order?._id?.substring(16, order?._id?.length)}</p>
           </div>
@@ -130,10 +142,12 @@ const SingleOrder = () => {
             </div>
             <div className="w-[300px] h-[200px] border rounded-lg">
               <div className="bg-gray-200 text-gray-800 p-3 rounded-t-lg text-center">
-                Payment Method:
+                Payment:
               </div>
               <div className="p-4 text-sm text-gray-500">
-                <p>{order?.paymentMethod}</p>{" "}
+                <p>{order?.paymentResult?.id}</p>
+                <p>{order?.paymentResult?.email_address}</p>
+                <p>{order?.paymentResult?.update_time?.substring(0, 10)}</p>
               </div>
             </div>
             <div className="w-[300px] h-[200px] border rounded-lg">
@@ -158,9 +172,39 @@ const SingleOrder = () => {
                 showCheckBox={false}
                 data={order?.orderItems}
                 actionColumn={userColumns}
-                extraClass="h-[300px]"
+                extraClass="h-[250px] pt-0"
               />
             )}
+            <div className="flex items-center justify-between px-8">
+              <div></div>
+              <div className="w-[300px] space-y-2">
+                <div className="flex items-center justify-between">
+                  <p>Taxes</p>
+                  <p>{order?.shippingDetails?.taxPrice}</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <p>Shipping</p>
+                  <p>{order?.shippingDetails?.shippingPrice}</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <p>Total</p>
+                  <p>{order?.shippingDetails?.totalPrice}</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <p>Payment Status</p>
+                  <p>{order?.isPaid && "PAID"}</p>
+                </div>
+                {order?.isPaid && !order?.isDelivered && (
+                  <Button
+                    disabled={loadingDeliver}
+                    onClick={deliverOrderHandler}
+                    className="p-2"
+                    primary
+                    children="Deliver order"
+                  />
+                )}
+              </div>
+            </div>
           </div>
 
           {loading && (
