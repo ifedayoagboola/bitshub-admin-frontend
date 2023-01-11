@@ -167,6 +167,7 @@ const ProductList = () => {
             url="/products/new"
             data={products}
             actionColumn={userColumns}
+            showCheckBox={true}
           />
         )}
       </div>
@@ -188,10 +189,7 @@ const ProductList = () => {
       )}
 
       {openModal && (
-        <CenterModal
-          modalHandler={handleDelete}
-          className="bg-transparent text-white"
-        >
+        <CenterModal modalHandler={handleDelete}>
           <DeleteProductModal
             action={deleteAction}
             modalHandler={handleDelete}
