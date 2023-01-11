@@ -7,7 +7,14 @@ import { deleteProduct } from "../../redux/slices/productSlice";
 import CenterModal from "../modals/CenterModal";
 import DeleteProductModal from "../modals/DeleteProductModal";
 
-const Datatable = ({ title, url, data, actionColumn }) => {
+const Datatable = ({
+  title,
+  url,
+  data,
+  actionColumn,
+  showCheckBox,
+  extraClass,
+}) => {
   const [idArray, setIdArray] = useState([]);
   const [openModal, setOpenModal] = useState(false);
 
@@ -23,7 +30,7 @@ const Datatable = ({ title, url, data, actionColumn }) => {
     setOpenModal(!openModal);
   };
   return (
-    <div className="datatable">
+    <div className={`datatable ${extraClass}`}>
       <div className="datatableTitle">
         <div>
           {title}
@@ -51,7 +58,7 @@ const Datatable = ({ title, url, data, actionColumn }) => {
         columns={actionColumn}
         pageSize={9}
         rowsPerPageOptions={[9]}
-        checkboxSelection
+        checkboxSelection={showCheckBox}
         onSelectionModelChange={(data) => {
           setIdArray(data);
         }}

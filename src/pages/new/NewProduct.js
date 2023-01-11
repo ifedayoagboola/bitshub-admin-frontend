@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import Axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import "./new.css";
-import { createProduct, productReset } from "../../redux/slices/productSlice";
-import { useNavigate, useParams } from "react-router-dom";
+import { createProduct } from "../../redux/slices/productSlice";
+import { useNavigate } from "react-router-dom";
 import LoadingBox from "../../components/LoadingBox";
 import MessageBox from "../../components/MessageBox";
 import Button from "../../components/Button";
@@ -43,7 +43,6 @@ const NewProduct = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(postSuccess);
     if (postSuccess) {
       navigate("/products");
     }
@@ -51,7 +50,6 @@ const NewProduct = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-
     dispatch(
       createProduct({
         name,
