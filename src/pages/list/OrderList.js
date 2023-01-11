@@ -7,19 +7,28 @@ import LoadingBox from "../../components/LoadingBox";
 import CenterModal from "../../components/modals/CenterModal";
 import DeleteProductModal from "../../components/modals/DeleteProductModal";
 import MessageBox from "../../components/MessageBox";
-import { listOrders } from "../../redux/slices/orderSlice";
+import {
+  deliverOrder,
+  listOrders,
+  orderReset,
+} from "../../redux/slices/orderSlice";
+import Button from "../../components/Button";
 
 const OrderList = () => {
   const [openModal, setOpenModal] = useState(false);
   const [orderId, setOrderId] = useState("");
 
   const { orders, loading, error } = useSelector((state) => state.listOrders);
+  const { order: delivered, loading: loadingDeliver } = useSelector(
+    (state) => state.deliverOrder
+  );
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(listOrders());
-  }, []);
+    dispatch(orderReset());
+  }, [dispatch, delivered]);
   const cancelOrderHandler = (id) => {
     setOpenModal(!openModal);
     setOrderId(id);
@@ -27,6 +36,9 @@ const OrderList = () => {
   const cancelOrderAction = () => {
     // dispatch(deleteProduct(productId));
     setOpenModal(!openModal);
+  };
+  const deliverOrderHandler = (id) => {
+    dispatch(deliverOrder(id));
   };
 
   const userColumns = [
@@ -82,26 +94,24 @@ const OrderList = () => {
     {
       field: "status",
       headerName: "Status",
-      width: 100,
+      width: 120,
       renderCell: (params) => {
-        const { isPaid, isDelivered, PaidAt } = params.row;
+        const { isPaid, isDelivered, PaidAt, deliveredAt } = params.row;
         return (
           <div
             className={`rounded p-1 text-xs ${
-              isPaid
-                ? "bg-yellow-400 text-gray-800"
-                : isPaid && isDelivered
+              isPaid && isDelivered
                 ? "bg-green-500 text-white"
+                : isPaid && !isDelivered
+                ? "bg-yellow-400 text-gray-800"
                 : "bg-gray-400 text-white"
             }`}
           >
-            {isPaid
-              ? "Paid"
-              : isPaid && isDelivered
+            {isPaid && isDelivered
               ? "Delivered"
               : isPaid && !isDelivered
               ? "Awaiting delivery"
-              : "Pending"}
+              : "Awaiting payment"}
           </div>
         );
       },
@@ -134,12 +144,15 @@ const OrderList = () => {
             >
               <div className="viewButton">View</div>
             </Link>
-            <Link
-              to={`/orders/${params.row._id}/edit`}
-              style={{ textDecoration: "none" }}
-            >
-              <div className="viewButton">Track</div>
-            </Link>
+            {params.row.isPaid && !params.row.isDelivered && (
+              <Button
+                primary
+                className="p-1"
+                onClick={() => deliverOrderHandler(params.row._id)}
+              >
+                Deliver
+              </Button>
+            )}
             <div
               className="deleteButton"
               onClick={() => cancelOrderHandler(params.row._id)}

@@ -45,7 +45,7 @@ export const updateProduct = createAsyncThunk(
       userSignin: { userInfo },
     } = getState();
     try {
-      const { data } = await Axios.put(
+      await Axios.put(
         `${BASE_URL}/api/products/${product.id}/update`,
         product,
         {
@@ -57,7 +57,6 @@ export const updateProduct = createAsyncThunk(
       toast.success("Product updated successfully", {
         toastId: customId,
       });
-      console.log(data);
     } catch (error) {
       const err =
         error.response && error.response.data.message

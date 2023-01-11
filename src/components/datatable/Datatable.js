@@ -52,6 +52,7 @@ const Datatable = ({
         )}
       </div>
       <DataGrid
+        aria-label="simple table"
         className="datagrid"
         rows={data}
         getRowId={(row) => row._id}

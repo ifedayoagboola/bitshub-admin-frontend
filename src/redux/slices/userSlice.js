@@ -1,7 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Axios from "axios";
+import { toast } from "react-toastify";
+
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 // const BASE_URL = "http://localhost:4000";
+const customId = "custom-id-yes";
 
 export const signin = createAsyncThunk(
   "users/signin",
@@ -11,13 +14,15 @@ export const signin = createAsyncThunk(
         `${BASE_URL}/api/users/signin`,
         credentials
       );
-      localStorage.setItem("userInfo", JSON.stringify(data));
-      return data;
+      localStorage?.setItem("userInfo", JSON.stringify(data));
     } catch (error) {
       const err =
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message;
+      toast.error(err, {
+        toastId: customId,
+      });
       return rejectWithValue(err);
     }
   }
@@ -26,7 +31,9 @@ export const signin = createAsyncThunk(
 const initialState = {
   loading: false,
   error: false,
-  userInfo: {},
+  userInfo: localStorage?.getItem("userInfo")
+    ? JSON.parse(localStorage.getItem("userInfo"))
+    : null,
 };
 
 export const userSlice = createSlice({

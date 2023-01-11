@@ -4,7 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
-import Dashboard from "./layouts/Dashboard";
+import AdminLayout from "./layouts/AdminLayout";
 import CustomerList from "./pages/list/CustomerList";
 import SingleCustomer from "./pages/single/SingleCustomer";
 import NewCustomer from "./pages/new/NewCustomer";
@@ -17,6 +17,7 @@ import NewVendor from "./pages/new/NewVendor";
 import VendorList from "./pages/list/VendorList";
 import SingleVendor from "./pages/single/SingleVendor";
 import NewProduct from "./pages/new/NewProduct";
+// import AdminRoute from "./components/AdminRoute";
 
 function App() {
   return (
@@ -27,9 +28,9 @@ function App() {
           <Route
             index
             element={
-              <Dashboard>
+              <AdminLayout>
                 <Home />
-              </Dashboard>
+              </AdminLayout>
             }
           />
           <Route index path="login" element={<Login />} />
@@ -37,36 +38,36 @@ function App() {
             <Route
               index
               element={
-                <Dashboard>
+                <AdminLayout>
                   <CustomerList />
-                </Dashboard>
+                </AdminLayout>
               }
             />
             <Route
               index
               path=":customerId"
               element={
-                <Dashboard>
+                <AdminLayout>
                   <SingleCustomer />
-                </Dashboard>
+                </AdminLayout>
               }
             />
             <Route
               index
               path="new"
               element={
-                <Dashboard>
+                <AdminLayout>
                   <NewCustomer />
-                </Dashboard>
+                </AdminLayout>
               }
             />
             <Route
               index
               path="edit"
               element={
-                <Dashboard>
+                <AdminLayout>
                   <NewCustomer />
-                </Dashboard>
+                </AdminLayout>
               }
             />
           </Route>
@@ -74,36 +75,36 @@ function App() {
             <Route
               index
               element={
-                <Dashboard>
+                <AdminLayout>
                   <ProductList />
-                </Dashboard>
+                </AdminLayout>
               }
             />
             <Route
               index
               path=":productId"
               element={
-                <Dashboard>
+                <AdminLayout>
                   <SingleProduct />
-                </Dashboard>
+                </AdminLayout>
               }
             />
             <Route
               index
               path="new"
               element={
-                <Dashboard>
+                <AdminLayout>
                   <NewProduct />
-                </Dashboard>
+                </AdminLayout>
               }
             />
             <Route
               index
               path=":id/edit"
               element={
-                <Dashboard>
+                <AdminLayout>
                   <EditProduct />
-                </Dashboard>
+                </AdminLayout>
               }
             />
           </Route>
@@ -111,36 +112,36 @@ function App() {
             <Route
               index
               element={
-                <Dashboard>
+                <AdminLayout>
                   <VendorList />
-                </Dashboard>
+                </AdminLayout>
               }
             />
             <Route
               index
               path=":vendorId"
               element={
-                <Dashboard>
+                <AdminLayout>
                   <SingleVendor />
-                </Dashboard>
+                </AdminLayout>
               }
             />
             <Route
               index
               path="new"
               element={
-                <Dashboard>
+                <AdminLayout>
                   <NewVendor />
-                </Dashboard>
+                </AdminLayout>
               }
             />
             <Route
               index
               path="edit"
               element={
-                <Dashboard>
+                <AdminLayout>
                   <NewVendor />
-                </Dashboard>
+                </AdminLayout>
               }
             />
           </Route>
@@ -148,18 +149,18 @@ function App() {
             <Route
               index
               element={
-                <Dashboard>
+                <AdminLayout>
                   <OrderList />
-                </Dashboard>
+                </AdminLayout>
               }
             />
             <Route
               index
               path=":orderId"
               element={
-                <Dashboard>
+                <AdminLayout>
                   <SingleOrder />
-                </Dashboard>
+                </AdminLayout>
               }
             />
           </Route>

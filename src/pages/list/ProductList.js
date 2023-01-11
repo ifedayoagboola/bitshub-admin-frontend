@@ -11,7 +11,6 @@ import {
 import LoadingBox from "../../components/LoadingBox";
 import CenterModal from "../../components/modals/CenterModal";
 import DeleteProductModal from "../../components/modals/DeleteProductModal";
-import { signin } from "../../redux/slices/userSlice";
 import MessageBox from "../../components/MessageBox";
 
 const ProductList = () => {
@@ -29,12 +28,8 @@ const ProductList = () => {
   const { postSuccess } = create;
 
   const dispatch = useDispatch();
-  const email = "admin@email.com";
-  const password = "1234";
 
   useEffect(() => {
-    dispatch(signin({ email, password }));
-
     if (deleteSuccess || updateSuccess || postSuccess) {
       dispatch(productReset());
     } else {

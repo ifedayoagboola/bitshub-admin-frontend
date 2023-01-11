@@ -17,5 +17,6 @@ export const store = configureStore({
     uploadProductImages: uploadSlice.reducer,
     listOrders: orderSlice.reducer,
     singleOrder: orderSlice.reducer,
+    deliverOrder: orderSlice.reducer,
   },
 });
