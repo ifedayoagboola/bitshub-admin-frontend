@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Axios from "axios";
 import { toast } from "react-toastify";
-// const BASE_URL = process.env.REACT_APP_BASE_URL;
-const BASE_URL = "http://localhost:4000";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+// const BASE_URL = "http://localhost:4000";
 const customId = "custom-id-yes";
 
 export const listOrders = createAsyncThunk(
